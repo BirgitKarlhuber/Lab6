@@ -1,0 +1,45 @@
+---
+title: "vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(Lab6)
+```
+
+
+## Brute force search
+Question: How much time does it takes to run the algorithm for n = 16 objects?
+
+
+## Dynamic programming
+Question: How much time does it takes to run the algorithm for n = 500 objects?
+
+
+## Greedy heuristic
+Question How much time does it takes to run the algorithm for n = 1000000 objects?
+
+
+## Profile your code and optimize your code
+Question: What performance gain could you get by trying to improving your code?
+
+
+## (*) Implentation in Rcpp
+Question: What performance gain could you get by using Rcpp and C++?
+
+
+## (*) Parallelize brute force search
+Question: What performance gain could you get by parallelizing brute force search?
+
+

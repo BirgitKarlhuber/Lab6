@@ -81,3 +81,5 @@ knapsack_brute_force <- function(x, W, parallel=FALSE){
 # # usethis::use_data(knapsack_objects, internal = TRUE)
 
 
+
+

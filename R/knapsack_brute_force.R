@@ -1,12 +1,13 @@
-#' Brute force alogrithm ...
+#' Brute force alogrithm goes through all possible alternatives and returns the 
+#' maximum value found.
 #' 
-#' xxxx
+#' This approach is of complexity O(2^n).
 #'
-#' @param x xxxxx
+#' @param x data frame with two variables, value and weight
 #' 
-#' @param  W xxxx
+#' @param  W knapsack size
 #'
-#' @return xxxx
+#' @return the maximum knapsack value and related elements
 #' 
 #' @export
 #' 
@@ -17,9 +18,40 @@
 #' @seealso \url{}
 
 
-knapsack_brute_force <- function(x, W){
-  # stopifnot()
+knapsack_brute_force <- function(x, W, parallel=FALSE){
+  stopifnot(is.data.frame(x), x>0, length(x)=2, is.numeric(W))
   
+  val <-0
+  maxval <- 0
+  n <- nrow(x)
+  elements <- length(n)
+  
+  if (parallel==TRUE){
+    cores <- parallel::detectCores()
+    clust <- makeCluster(cores, type = "PSOCK")
+    #res3 <- parLapply(clust, a, euclidian, b=33) syntax should be this, got this from slides
+    
+  }
+  else{
+    lapply(1:n, function(i){
+      comb <- combn(1:n, i) # all the combinations
+      k <- 1
+      while(k <= ncol(comb)){ 
+        if(sum(x$w[comb[,k]]) <= W){
+          val <- sum(x$v[comb[,k]])
+          if(val > maxval){
+            elements <- comb[,k]
+            maxval <- val
+          }
+        }
+        k <- k + 1
+      }
+    })
+  }
+  
+  
+  }
+}
   
   
 }

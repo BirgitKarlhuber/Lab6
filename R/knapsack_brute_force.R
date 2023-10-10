@@ -3,7 +3,7 @@
 #' 
 #' This approach is of complexity O(2^n).
 #'
-#' @param x data frame with two variables, value and weight
+#' @param x data frame with two variables, x = value and w = weight
 #' 
 #' @param  W knapsack size
 #'

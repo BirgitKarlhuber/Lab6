@@ -29,29 +29,39 @@ knapsack_brute_force <- function(x, W, parallel=FALSE){
   if (parallel==TRUE){
     cores <- parallel::detectCores()
     clust <- makeCluster(cores, type = "PSOCK")
-    #res3 <- parLapply(clust, a, euclidian, b=33) syntax should be this, got this from slides
-    
-  }
-  else{
-    lapply(1:n, function(i){
-      comb <- combn(1:n, i) # all the combinations
+    valori <- parallel::parLapply(clust, 1:n, function(i, x, W){
+      comb <- combn(1:n, i)
       k <- 1
-      while(k <= ncol(comb)){ 
-        if(sum(x$w[comb[,k]]) <= W){
-          val <- sum(x$v[comb[,k]])
-          if(val > maxval){
+      while (k <= ncol(comb)){
+        if (W > sum(x$w[comb[,k]])){
+          val <- sum(x$W[comb[,k]])
+          if (val > maxval){
             elements <- comb[,k]
             maxval <- val
           }
         }
-        k <- k + 1
+        k <- k+1
       }
+      return(valori)
+      parallel::stopCluster(clust)
     })
+  } else{
+    lapply(1:n, function(i){
+      comb <- combn(1:n, i) # all the combinations
+      k <- 1
+      while(k <= ncol(comb)){ 
+        if (W > sum(x$w[comb[,k]])){
+          val <- sum(x$v[comb[,k]])
+          if (val > maxval){
+            elements <- comb[,k]
+            maxval <- val
+          }
+        }
+        k <- k+1
+      }
+      return(list(maxval, elements))
+    }, x, W)
   }
-  
-  
-  }
-}
   
   
 }

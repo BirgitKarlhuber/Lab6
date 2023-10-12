@@ -1,4 +1,4 @@
-#' Brute force alogrithm goes through all possible alternatives and returns the 
+#' Brute force algorithm goes through all possible alternatives and returns the 
 #' maximum value found.
 #' 
 #' This approach is of complexity O(2^n).

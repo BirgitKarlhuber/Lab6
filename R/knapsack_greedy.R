@@ -1,12 +1,14 @@
 #' Greedy Algorithm
 #' 
-#' xxxx
+#' This algorithm proceeds to insert the items into the knapsack based on 
+#' their value/weight ratio, inserting the items with higher ratios first.
+#' This method gives an approximation of the solution to the knapsack problem.
 #'
-#' @param x xxxxx
+#' @param x data frame with two variables, x = value and w = weight
 #' 
-#' @param  W xxxx
+#' @param  W knapsack size
 #'
-#' @return xxxx
+#' @return the maximum knapsack value and related elements
 #' 
 #' @export
 #' 
@@ -19,7 +21,22 @@
 
 knapsack_greedy <- function(x, W){
   
+  n <- nrow(x)
+  val <-0
+  items <- rep(0,n)
+  val_wei <- x$v /x$w      # vector with value / weight
+  pos <- 0   
   
+  # we find the max value of the weights, we take the position so calculate 
+  # the sum and to save the items we are adding
+  while ((sum(x$w[items]) + x$w[which.max(val_wei)]) <= W){
+    val <- val + x$v[which.max(val_wei)] 
+    items[pos] <- which.max(val_wei)
+    val_wei[which.max(val_wei)] <- 0 
+    pos <- pos +1
+  }
+  items <- items[which(items>0)]
+  return(list(value=round(val), elements=items))
 }
 
 # knapsack_greedy(x = knapsack_objects[1:800,], W = 3500)

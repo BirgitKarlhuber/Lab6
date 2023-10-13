@@ -11,24 +11,34 @@
 #' 
 #' @export
 #' 
+#' @import parallel
+#' 
 #' @examples
 #' library(Lab6)
 #' knapsack_brute_force(x, W)
 #' 
 #' @seealso \url{}
 
+# RNGversion("4.3.1")
+
+library(parallel)
 
 knapsack_brute_force <- function(x, W, parallel=FALSE){
-  stopifnot(is.data.frame(x), x>0, length(x)=2, is.numeric(W))
+  stopifnot(is.data.frame(x), x>0, length(x)==2, names(x) == c("w","v"))
+  stopifnot(is.numeric(W), W<0, length(W)==1)
   
-  val <-0
+  if(is.logical(parallel) && !missing(parallel))
+    {stop("variable parallel must be logical")
+  }
+  
+  val <- 0
   maxval <- 0
   n <- nrow(x)
   elements <- length(n)
   
   if (parallel==TRUE){
     cores <- parallel::detectCores()
-    clust <- makeCluster(cores, type = "PSOCK")
+    clust <- makeCluster(cores, type = "PSOCK") # maybe cores-1
     valori <- parallel::parLapply(clust, 1:n, function(i, x, W){
       comb <- combn(1:n, i)
       k <- 1
@@ -47,7 +57,7 @@ knapsack_brute_force <- function(x, W, parallel=FALSE){
     })
   } else{
     lapply(1:n, function(i){
-      comb <- combn(1:n, i) # all the combinations
+      comb <- combn(1:n, i) # all the combinations of i from 1 to n
       k <- 1
       while(k <= ncol(comb)){ 
         if (W > sum(x$w[comb[,k]])){
@@ -66,11 +76,17 @@ knapsack_brute_force <- function(x, W, parallel=FALSE){
   
 }
 
+
+
 # knapsack_brute_force(x = knapsack_objects[1:8,], W = 3500)
 # knapsack_brute_force(x = knapsack_objects[1:12,], W = 3500)
 # knapsack_brute_force(x = knapsack_objects[1:8,], W = 2000)
 # knapsack_brute_force(x = knapsack_objects[1:12,], W = 2000)
 
+
+### RUN to check time:
+# system.time(brute_force_knapsack(x = knapsack_objects[1:16,], W = 3500))
+# lineprof(knapsack_brute_force(x = knapsack_objects[1:16,], W = 3500))
 
 
 
@@ -89,7 +105,9 @@ knapsack_brute_force <- function(x, W, parallel=FALSE){
 # )
 # 
 # # usethis::use_data(knapsack_objects, internal = TRUE)
+# 
+# 
+# 
 
 
-
-
+# check if parallel is running faster than without - if not we wrong part parallized

@@ -11,44 +11,43 @@
 #' @export
 #' 
 #' @examples
-#' library(Lab6)
-#' knapsack_greedy(x, W)
 #' 
-#' @seealso \url{(https://en.wikipedia.org/wiki/Knapsack_problem#Greedy_approximation_algorithm}
+#' @seealso \url{https://en.wikipedia.org/wiki/Knapsack_problem#Greedy_approximation_algorithm}
+
+# library(Lab6)
+# greedy_knapsack(x = knapsack_objects[1:800,], W = 3500)
 
 
-knapsack_greedy <- function(x, W){
+
+greedy_knapsack <- function(x, W){
   
   # check input variables
   stopifnot(is.data.frame(x), x>0, length(x)==2, names(x) == c("w","v"))
-  stopifnot(is.numeric(W), W<0, length(W)==1)
+  stopifnot(is.numeric(W), W>0, length(W)==1)
   
   # initialize starting values
   n <- nrow(x) # number of items
-  val <- 0 # maximum knapsack value
-  items <- rep(0,n) # set 
-  val_wei <- x$v/x$w      # vector with ratio (value/weight)
+  val <- 0 # current knapsack value
+  elements <- rep(0,n)
+  ratio <- x$v/x$w      # vector with ratio (value/weight)
   
-  pos <- 0   
+  i <- 0   
   
   # we find the max value of the weights, we take the position so calculate 
   # the sum and to save the items we are adding
-  while((sum(x$w[items]) + x$w[which.max(val_wei)]) <= W){
+  
+  while((sum(x$w[elements]) + x$w[which.max(ratio)]) <= W && any(x$w>0)){
     
-    val <- val + x$v[which.max(val_wei)] 
-    items[pos] <- which.max(val_wei)
-    val_wei[which.max(val_wei)] <- 0 
-    
-    pos <- pos + 1
+    val <- val + x$v[which.max(ratio)] 
+    elements[i] <- which.max(ratio)
+    ratio[which.max(ratio)] <- 0 # x$w[which.max(ratio)] <- 0
+    i <- i + 1
   }
   
-  items <- items[which(items>0)]
-  return(list(value=round(val), elements=items))
+  elements <- elements[which(elements>0)]
+  return(list(value=round(val), elements=elements))
 }  
 
-
-
-
-# knapsack_greedy(x = knapsack_objects[1:800,], W = 3500)
-# knapsack_greedy(x = knapsack_objects[1:1200,], W = 2000)
+# greedy_knapsack(x = knapsack_objects[1:800,], W = 3500)
+# greedy_knapsack(x = knapsack_objects[1:1200,], W = 2000)
 

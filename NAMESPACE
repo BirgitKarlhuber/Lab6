@@ -1,1 +1,1 @@
-export("knapsack_brute_force", "knapsack_dynamic", "knapsack_greedy")
+export("brute_force_knapsack", "dynamic_knapsack","greedy_knapsack")

@@ -15,31 +15,66 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(Lab6)
+# library(Lab6)
 ```
+
+
+```{r}
+
+suppressWarnings(RNGversion(min(as.character(getRversion()),"3.5.3")))
+
+set.seed(42, kind = "Mersenne-Twister", normal.kind = "Inversion")
+n <- 1000000
+knapsack_objects <- data.frame(
+w=sample(1:4000, size = n, replace = TRUE),
+v=runif(n = n, 0, 10000)
+)
+
+```
+
 
 
 ## Brute force search
 Question: How much time does it takes to run the algorithm for n = 16 objects?
+```{r}
+
+# system.time(brute_force_knapsack(x = knapsack_objects[1:16,], W = 3500))
+
+```
 
 
 ## Dynamic programming
 Question: How much time does it takes to run the algorithm for n = 500 objects?
+```{r}
+
+# system.time(dynamic_knapsack(x = knapsack_objects[1:500,], W = 3500))
+
+```
 
 
 ## Greedy heuristic
 Question How much time does it takes to run the algorithm for n = 1000000 objects?
+```{r}
+
+# system.time(greedy_knapsack(x = knapsack_objects, W = 3500))
+
+```
 
 
 ## Profile your code and optimize your code
 Question: What performance gain could you get by trying to improving your code?
+```{r}
 
-
-## (*) Implentation in Rcpp
-Question: What performance gain could you get by using Rcpp and C++?
+```
 
 
 ## (*) Parallelize brute force search
 Question: What performance gain could you get by parallelizing brute force search?
+```{r}
+
+# system.time(brute_force_knapsack(x = knapsack_objects[1:12,], W = 2000))
+# system.time(brute_force_knapsack(x = knapsack_objects[1:12,], W = 2000, parallel = TRUE))
+
+```
 
 

@@ -3,10 +3,10 @@ Type: Package
 Title: Lab6 - fast R Code
 Version: 1.0
 Date: 2023-10-05
-Depends: R (>= 3.4)
+Depends: R (>= 3.4), parallel, utils
 Author: Birgit Karlhuber <birgit@karlhuber.net> and Daniele Bozzoli <danbo826@student.liu.se>
 Maintainer: Birgit Karlhuber <birgit@karlhuber.net> and Daniele Bozzoli <danbo826@student.liu.se>
-Description: More about what it does (maybe more than one line)
+Description: This package studies the effects of different algorithms with different comlexity (brute force, dynamic and greedy) based on the knapsack-problem. Furthermore it uses parallization to speed the code up. 
 License: GPL (>= 2) | file LICENCE
 Encoding: UTF-8
 Suggests: 
@@ -15,3 +15,4 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+RoxygenNote: 7.2.3

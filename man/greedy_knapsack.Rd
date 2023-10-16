@@ -15,7 +15,12 @@ greedy_knapsack(x, W)
 the maximum knapsack value and related elements
 }
 \description{
-This algorithm proceeds to insert the items into the knapsack based on their value/weight ratio, inserting the items with higher ratios first. This method gives an approximation of the solution to the knapsack problem.
+This algorithm proceeds to insert the items into the knapsack based on their value/weight ratio, inserting the items with higher ratios first. This method gives an approximation of the solution to the knapsack problem. It is of complexity O(n*log(n)).
+}
+\examples{
+library(Lab6)
+greedy_knapsack(x = knapsack_objects[1:800,], W = 3500)
+
 }
 \seealso{
 \url{https://en.wikipedia.org/wiki/Knapsack_problem#Greedy_approximation_algorithm}

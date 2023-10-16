@@ -1,21 +1,20 @@
 #' Dynamic programming
 #' 
-#' xxxx
+#' This algorithm tries to solve the knapsack problem, by an dynamic approach. 
 #'
-#' @param x data frame with two variables, x = value and  w= weight
+#' @param x data frame with two columns:  v = value and w = weights of each item to put it into the knapsack. It is of complexity O(Wn), so it should scale much better than the brute force alogrithm. 
 #' 
-#' @param  W knapsack size
+#' @param  W knapsack size, needs to be a positive value
 #'
 #' @return the maximum knapsack value and related elements
 #' 
 #' @export
 #' 
 #' @examples
+#' library(Lab6)
+#' dynamic_knapsack(x = knapsack_objects[1:8,], W = 3500)
 #' 
 #' @seealso \url{https://en.wikipedia.org/wiki/Knapsack}
-
-# library(Lab6)
-# dynamic_knapsack(x = knapsack_objects[1:8,], W = 3500)
 
 
 dynamic_knapsack <- function(x, W){
@@ -71,7 +70,7 @@ dynamic_knapsack <- function(x, W){
 # dynamic_knapsack(x = knapsack_objects[1:12,], W = 2000)
 
 
-## Data
+# # Data
 # RNGversion(min(as.character(getRversion()),"3.5.3"))
 # 
 # set.seed(42, kind = "Mersenne-Twister", normal.kind = "Inversion")
@@ -80,6 +79,10 @@ dynamic_knapsack <- function(x, W){
 #     w=sample(1:4000, size = n, replace = TRUE),
 #     v=runif(n = n, 0, 10000)
 # )
+
+
+
+
 
 
 

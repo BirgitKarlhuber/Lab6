@@ -1,6 +1,6 @@
 #' Greedy Algorithm
 #' 
-#' This algorithm proceeds to insert the items into the knapsack based on their value/weight ratio, inserting the items with higher ratios first. This method gives an approximation of the solution to the knapsack problem.
+#' This algorithm proceeds to insert the items into the knapsack based on their value/weight ratio, inserting the items with higher ratios first. This method gives an approximation of the solution to the knapsack problem. It is of complexity O(n*log(n)). 
 #'
 #' @param x data frame with two columns:  v = value and w = weights of each item to put it into the knapsack.
 #' 
@@ -11,12 +11,10 @@
 #' @export
 #' 
 #' @examples
+#' library(Lab6)
+#' greedy_knapsack(x = knapsack_objects[1:800,], W = 3500)
 #' 
 #' @seealso \url{https://en.wikipedia.org/wiki/Knapsack_problem#Greedy_approximation_algorithm}
-
-# library(Lab6)
-# greedy_knapsack(x = knapsack_objects[1:800,], W = 3500)
-
 
 
 greedy_knapsack <- function(x, W){
@@ -31,7 +29,7 @@ greedy_knapsack <- function(x, W){
   elements <- rep(0,n)
   ratio <- x$v/x$w      # vector with ratio (value/weight)
   
-  i <- 0   
+  i <- 1   
   
   # we find the max value of the weights, we take the position so calculate 
   # the sum and to save the items we are adding

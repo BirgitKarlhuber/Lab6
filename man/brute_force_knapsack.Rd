@@ -2,21 +2,27 @@
 % Please edit documentation in R/brute_force_knapsack.R
 \name{brute_force_knapsack}
 \alias{brute_force_knapsack}
-\title{Brute force algorithm goes through all possible alternatives and returns the 
-maximum value found.}
+\title{Brute force algorithm}
 \usage{
 brute_force_knapsack(x, W, parallel = FALSE)
 }
 \arguments{
-\item{x}{data frame with two variables, x = value and w = weight}
+\item{x}{data frame with two columns:  v = value and w = weights of each item to put it into the knapsack.}
 
-\item{W}{knapsack size}
+\item{W}{knapsack size, needs to be a positive value}
+
+\item{parallel}{Wether to speed up the code by parallizing (TRUE) or not (FALSE)}
 }
 \value{
 the maximum knapsack value and related elements
 }
 \description{
-This approach is of complexity O(2^n).
+The brute force algorithm goes through all possible alternatives and returns the maximum value found. It is of complexity O(2^n).
+}
+\examples{
+library(Lab6)
+brute_force_knapsack(x = knapsack_objects[1:8,], W = 3500)
+
 }
 \seealso{
 \url{https://en.wikipedia.org/wiki/Knapsack}

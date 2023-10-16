@@ -7,15 +7,20 @@
 dynamic_knapsack(x, W)
 }
 \arguments{
-\item{x}{data frame with two variables, x = value and  w= weight}
+\item{x}{data frame with two columns:  v = value and w = weights of each item to put it into the knapsack. It is of complexity O(Wn), so it should scale much better than the brute force alogrithm.}
 
-\item{W}{knapsack size}
+\item{W}{knapsack size, needs to be a positive value}
 }
 \value{
 the maximum knapsack value and related elements
 }
 \description{
-xxxx
+This algorithm tries to solve the knapsack problem, by an dynamic approach.
+}
+\examples{
+library(Lab6)
+dynamic_knapsack(x = knapsack_objects[1:8,], W = 3500)
+
 }
 \seealso{
 \url{https://en.wikipedia.org/wiki/Knapsack}

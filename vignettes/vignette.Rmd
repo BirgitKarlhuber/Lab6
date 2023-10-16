@@ -132,7 +132,7 @@ The lapply and the while-loop take the most time.
 ### Dynamic alogrithm
 ```{r}
 
-x = knapsack_objects[1:8,]
+x = knapsack_objects[1:800,]
 W = 3500
 
 profvis({
@@ -184,6 +184,109 @@ profvis({
 ```
 As expected take the for-loops and the while-loop most of the computation time. Furthermore the sort() function is also time consuming. 
 
+### TEST Dynamic alg
+```{r}
+
+x = knapsack_objects[1:800,]
+W = 3500
+
+# system.time of the dynamic algorithm
+system.time({
+  
+  # check input variables
+  stopifnot(is.data.frame(x), x>0, length(x)==2, names(x) == c("w","v"))
+  stopifnot(is.numeric(W), W>0, length(W)==1)
+  
+  
+  # initialize starting values
+  n <- nrow(x)
+  val <- x$v
+  wei <- x$w
+
+  m <- matrix(nrow = n+1, ncol = W+1)
+  m[1,] <- 0
+  m[,1] <- 0
+  
+  for(i in 1:n){    
+    for(c in 0:W){ # c = capacity of knapsack
+      
+      if(wei[i] > c){
+        m[i+1,c+1] <- m[i,c+1]
+      } else {
+        m[i+1,c+1] <- max(m[i,c+1], m[i,c+1 -wei[i]] + val[i])
+      }
+    }
+  } 
+  
+  c <- c+1  
+  i <- which.max(m[,c])
+  elements <- length(n)
+  k <- 1
+  elements[k] <- i-1
+  
+  while(m[i,c]!=0 && c!=1 && i!=0){
+    k <- k+1
+    c <- (c-wei[i-1])
+    i <- which(m[,c] == m[i-1,c])[1]
+    elements[k] <- i-1
+  }
+  
+  value <- round(m[n+1,W+1])
+  elements <- sort(elements[which(elements>0)])
+  
+  result <- list(value=value, elements=elements)
+})
+
+# system.time of the dynamic algorithm with different while loop
+system.time({
+  
+  # check input variables
+  stopifnot(is.data.frame(x), x>0, length(x)==2, names(x) == c("w","v"))
+  stopifnot(is.numeric(W), W>0, length(W)==1)
+  
+  
+  # initialize starting values
+  n <- nrow(x)
+  val <- x$v
+  wei <- x$w
+
+  m <- matrix(nrow = n+1, ncol = W+1)
+  m[1,] <- 0
+  m[,1] <- 0
+  
+  for(i in 1:n){    
+    for(c in 0:W){ # c = capacity of knapsack
+      
+      if(wei[i] > c){
+        m[i+1,c+1] <- m[i,c+1]
+      } else {
+        m[i+1,c+1] <- max(m[i,c+1], m[i,c+1 -wei[i]] + val[i])
+      }
+    }
+  } 
+  
+  c <- c+1  
+  i <- which.max(m[,c])
+  elements <- length(n)
+  k <- 1
+  elements[k] <- i-1
+  
+  while (m[i,c]!=0 && c!=1 && i!=0) {
+    k <- k+1
+    c <- c-wei[i-1]
+    i <- which(m[,c] == m[i-1,c])[1]
+    elements[k] <- i-1
+}
+
+  
+  value <- round(m[n+1,W+1])
+  elements <- sort(elements[which(elements>0)])
+  
+  result <- list(value=value, elements=elements)
+})
+
+```
+We can notice a very little improvement in system.time with the second version of the while loop, in which we used the vectorization method. 
 
 ### Greedy algorithm
 ```{r}
@@ -219,7 +322,66 @@ profvis({
 ```
 The while-loops is the time-consuming part of this function. 
 
+### TEST Greedy alg
+```{r}
 
+x = knapsack_objects[1:8000,]
+W = 3500
+
+# system.time of greedy algorithm
+system.time({
+  
+  # initialize starting values
+  n <- nrow(x) # number of items
+  val <- 0 # current knapsack value
+  elements <- rep(0,n)
+  ratio <- x$v/x$w      # vector with ratio (value/weight)
+  
+  i <- 1   
+  
+  # we find the max value of the weights, we take the position so calculate 
+  # the sum and to save the items we are adding
+  
+  while((sum(x$w[elements]) + x$w[which.max(ratio)]) <= W && any(x$w>0)){
+    
+    val <- val + x$v[which.max(ratio)] 
+    elements[i] <- which.max(ratio)
+    ratio[which.max(ratio)] <- 0 # x$w[which.max(ratio)] <- 0
+    i <- i + 1
+  }
+  
+  elements <- elements[which(elements>0)]
+  result <- list(value=round(val), elements=elements)
+})
+
+# system.time of greedy algorithm with different while loop
+system.time({
+  
+  # initialize starting values
+  n <- nrow(x) # number of items
+  val <- 0 # current knapsack value
+  elements <- rep(0,n)
+  ratio <- x$v/x$w      # vector with ratio (value/weight)
+  
+  i <- 1   
+  
+  # we find the max value of the weights, we take the position so calculate 
+  # the sum and to save the items we are adding
+  
+  while(sum(x$w[elements]) + max(x$w[ratio > 0]) <= W && any(x$w > 0)){
+    selected_idx <- which.max(ratio)
+    val <- val + x$v[selected_idx]
+    elements[i] <- selected_idx
+    ratio[selected_idx] <- 0
+    i <- i + 1
+    }
+  
+  elements <- elements[which(elements>0)]
+  result <- list(value=round(val), elements=elements)
+})
+
+```
+Changed the while loop, gaining a very tiny improvement of run time. 
 
 
 Question: What performance gain could you get by trying to improving your code? \newline

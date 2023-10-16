@@ -67,14 +67,14 @@ system.time(greedy_knapsack(x = knapsack_objects, W = 3500))
 
 ## Profile your code and optimize your code
 
-Optimize code such that it runs faster is an iterative process:\newline
+Optimizing code such that it runs faster is an iterative process:\newline
 
 1. Find biggest bottleneck (slowest part of the code).\newline
 2. Try to eliminate it (may not successful but that's okay). \newline
 3. Repeat until code is "fast enough". \newline
 
 
-There exists a number of techniques to improve a code. So of them are: \newline
+There exists a number of techniques to improve a code. Some of them are: \newline
 
 1. Look for existing solutions.\newline
 2. Do less work.\newline
@@ -88,10 +88,54 @@ There exists a number of techniques to improve a code. So of them are: \newline
 ### Brute force alogrithm
 ```{r}
 
+x = knapsack_objects[1:15,]
+W = 3500
+
 profvis({
   
-  x = knapsack_objects[1:25,]
-  W = 3500
+  # check input variables
+  stopifnot(is.data.frame(x), x>0, length(x)==2, names(x) == c("w","v"))
+  stopifnot(is.numeric(W), W>0, length(W)==1)
+  
+  # if(!missing(parallel) && !is.logical(parallel)){
+  #   stop("variable parallel must be logical")
+  # }
+  
+  # initialize starting values
+  val <- 0
+  maxval <- 0
+  n <- nrow(x)
+  elements <- length(n)
+  
+  lapply(1:n, function(i){
+      comb <- utils::combn(n, i) # all the combinations of i from 1 to n
+      k <- 1
+      while(k <= ncol(comb)){ 
+        if (W > sum(x$w[comb[,k]])){
+          val <- sum(x$v[comb[,k]])
+          if (val > maxval){
+            elements <<- comb[,k] # save elements of that combination
+            maxval <<- val # save the max value found
+          }
+        }
+        k <- k+1
+      }
+    })
+    result <- list(value = round(maxval), elements=elements)
+})
+
+```
+The lapply and the while-loop take the most time. 
+
+
+
+### Dynamic alogrithm
+```{r}
+
+x = knapsack_objects[1:8,]
+W = 3500
+
+profvis({
   
   # check input variables
   stopifnot(is.data.frame(x), x>0, length(x)==2, names(x) == c("w","v"))
@@ -102,7 +146,7 @@ profvis({
   n <- nrow(x)
   val <- x$v
   wei <- x$w
-  
+
   m <- matrix(nrow = n+1, ncol = W+1)
   m[1,] <- 0
   m[,1] <- 0
@@ -117,7 +161,6 @@ profvis({
       }
     }
   } 
-  
   
   c <- c+1  
   i <- which.max(m[,c])
@@ -134,76 +177,58 @@ profvis({
   
   value <- round(m[n+1,W+1])
   elements <- sort(elements[which(elements>0)])
-  list(value=value, elements=elements)
   
+  result <- list(value=value, elements=elements)
 })
 
 ```
-As expected take the for-loops and the while-loop most of the computation time.
+As expected take the for-loops and the while-loop most of the computation time. Furthermore the sort() function is also time consuming. 
 
-```{r}
-
-
-x = knapsack_objects[1:25,]
-W = 3500
-
-# check input variables
-stopifnot(is.data.frame(x), x>0, length(x)==2, names(x) == c("w","v"))
-stopifnot(is.numeric(W), W>0, length(W)==1)
-
-
-# initialize starting values
-n <- nrow(x)
-val <- x$v
-wei <- x$w
-
-m <- matrix(nrow = n+1, ncol = W+1)
-m[1,] <- 0
-m[,1] <- 0
-  
-
-profvis({
-  
-  for(i in 1:n){    
-    for(c in 0:W){ # c = capacity of knapsack
-      
-      if(wei[i] > c){
-        m[i+1,c+1] <- m[i,c+1]
-      } else {
-        m[i+1,c+1] <- max(m[i,c+1], m[i,c+1 -wei[i]] + val[i]) # takes most of  the time
-      } 
-    }
-  } 
-})
-
-```
-
-
-
-
-
-
-### Dynamic alogrithm
-```{r}
-
-```
 
 ### Greedy algorithm
 ```{r}
 
+x = knapsack_objects[1:8000,]
+W = 3500
+
+profvis({
+  
+  # initialize starting values
+  n <- nrow(x) # number of items
+  val <- 0 # current knapsack value
+  elements <- rep(0,n)
+  ratio <- x$v/x$w      # vector with ratio (value/weight)
+  
+  i <- 1   
+  
+  # we find the max value of the weights, we take the position so calculate 
+  # the sum and to save the items we are adding
+  
+  while((sum(x$w[elements]) + x$w[which.max(ratio)]) <= W && any(x$w>0)){
+    
+    val <- val + x$v[which.max(ratio)] 
+    elements[i] <- which.max(ratio)
+    ratio[which.max(ratio)] <- 0 # x$w[which.max(ratio)] <- 0
+    i <- i + 1
+  }
+  
+  elements <- elements[which(elements>0)]
+  result <- list(value=round(val), elements=elements)
+})
+
 ```
+The while-loops is the time-consuming part of this function. 
 
 
-Question: What performance gain could you get by trying to improving your code?
-```{r}
-
-```
 
 
+Question: What performance gain could you get by trying to improving your code? \newline
+Hopefully a faster code. 
 
 
 ## (*) Parallelize brute force search
-Question: What performance gain could you get by parallelizing brute force search?
+Question: What performance gain could you get by parallelising brute force search? \newline
+Speeding up the run time of the code.
 ```{r}
 
 # system.time(brute_force_knapsack(x = knapsack_objects[1:12,], W = 2000))

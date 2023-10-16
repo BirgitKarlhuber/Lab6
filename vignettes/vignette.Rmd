@@ -125,8 +125,9 @@ profvis({
 })
 
 ```
-The lapply and the while-loop take the most time. 
-
+The lapply and the while-loop take the most time.
+These points can be optimized through the use of the parallelization method,
+which is implemented in the normal function.
 
 
 ### Dynamic alogrithm
@@ -184,7 +185,7 @@ profvis({
 ```
 As expected take the for-loops and the while-loop most of the computation time. Furthermore the sort() function is also time consuming. 
 
-### TEST Dynamic alg
+### System.time Dynamic algorithm comparison
 ```{r}
 
 x = knapsack_objects[1:800,]
@@ -237,7 +238,7 @@ system.time({
   result <- list(value=value, elements=elements)
 })
 
-# system.time of the dynamic algorithm with different while loop
+# system.time of the dynamic algorithm with different while loop (vectorization)
 system.time({
   
   # check input variables
@@ -286,7 +287,7 @@ system.time({
 })
 
 ```
-We can notice a very little improvement in system.time with the second version of the while loop, in which we used the vectorization method. 
+We can notice a little improvement in system.time with the second version of the while loop, in which we used the vectorization method. 
 
 ### Greedy algorithm
 ```{r}
@@ -322,10 +323,10 @@ profvis({
 ```
 The while-loops is the time-consuming part of this function. 
 
-### TEST Greedy alg
+### System.time Greedy algorithm comparison
 ```{r}
 
-x = knapsack_objects[1:8000,]
+x = knapsack_objects[1:80000,]
 W = 3500
 
 # system.time of greedy algorithm
@@ -381,7 +382,7 @@ system.time({
 })
 
 ```
-Changed the while loop, gaining a very tiny improvement of run time. 
+Changed the while loop, memorizing the "which.max()" value instead of calling it three times, gaining a considerable improvement of run time.
 
 
 Question: What performance gain could you get by trying to improving your code? \newline

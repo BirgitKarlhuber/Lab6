@@ -45,7 +45,3 @@ greedy_knapsack <- function(x, W){
   elements <- elements[which(elements>0)]
   return(list(value=round(val), elements=elements))
 }  
-
-# greedy_knapsack(x = knapsack_objects[1:800,], W = 3500)
-# greedy_knapsack(x = knapsack_objects[1:1200,], W = 2000)
-
